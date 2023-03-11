@@ -1,0 +1,18 @@
+name: JavaScript Action Test
+
+on: [push, pull_request]
+
+jobs:
+  test-build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Issue Analyzer action step
+        uses: ./
+        id: hello
+        with:
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repository-name: 'runner-images'
+          custom-date: '2023-02-20'
+
