@@ -13,7 +13,6 @@ inputs:
   custom-date:
     description: 'Custom date (up until today) from which the repository data is analyzed'
     required: false
-    default: now
 
 runs:
   using: 'node16'
