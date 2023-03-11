@@ -17009,6 +17009,9 @@ try {
     const REPO_NAME = core.getInput('repository-name');
     let CUSTOM_DATE = core.getInput('custom-date');
     const GITHUB_TOKEN = core.getInput('repo-token');
+    if (CUSTOM_DATE === undefined) {
+        CUSTOM_DATE = null;
+    }
     
 
     async function fetchIssues(repositoryName, state = 'all', date = null) {
