@@ -8,7 +8,7 @@ const API_ENDPOINT_URL = 'https://api.github.com/search/issues';
 
 try {
     const REPO_NAME = core.getInput('repository-name');
-    let CUSTOM_DATE = core.getInput('custom-date') === undefined ? CURRENT_DATE : core.getInput('custom-date');
+    let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
     const GITHUB_TOKEN = core.getInput('repo-token');
     const dateObject = new Date();
     const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
@@ -56,7 +56,7 @@ try {
         const stringWithNotNullDate = 'Date provided. Gathering Issue information since the date provided'
         const stringWithNullDate = 'Date not provided. Gathering Issue information in total numbers up to now...'
 
-        if (CUSTOM_DATE === null || CUSTOM_DATE === CURRENT_DATE) {
+        if (CUSTOM_DATE === '' || CUSTOM_DATE === CURRENT_DATE) {
             console.log(stringWithNullDate);
         }
         else {
