@@ -16,7 +16,7 @@ try {
 
     async function fetchIssues(repositoryName, state = 'all', date = null) {
         try {
-            const query = `q=repo:actions/${REPO_NAME}+type:issue`
+            const query = `q=repo:actions/${repositoryName}+type:issue`
             const urlWithRepoName = `${API_ENDPOINT_URL}?${query}`
 
             if (date !== null) {
