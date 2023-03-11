@@ -17006,11 +17006,11 @@ const readline = __nccwpck_require__(4521);
 const API_ENDPOINT_URL = 'https://api.github.com/search/issues';
 
 try {
-    const REPO_NAME = core.getInput('repository-name');
-    let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
-    const GITHUB_TOKEN = core.getInput('repo-token');
     const dateObject = new Date();
     const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
+    let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
+    const REPO_NAME = core.getInput('repository-name');
+    const GITHUB_TOKEN = core.getInput('repo-token');
 
     async function fetchIssues(repositoryName, state = 'all', date = null) {
         try {
