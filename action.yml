@@ -1,0 +1,14 @@
+name: 'Repository Analyzer'
+description: 'For a given repository, the action returns information, such as total PRs/issues (open or closed) and PRs opened in the custom date'
+inputs:
+  repository-name:
+    description: 'Name of the repository to analyze'
+    required: true
+    default: 'checkout'
+  custom-date:
+    description: 'Custom date (up until today) from which the repository data is analyzed'
+    required: false
+    # default
+runs:
+  using: 'node16'
+  main: 'index.js'
