@@ -10,10 +10,6 @@ try {
     const REPO_NAME = core.getInput('repository-name');
     let CUSTOM_DATE = core.getInput('custom-date');
     const GITHUB_TOKEN = core.getInput('repo-token');
-
-    if (CUSTOM_DATE === undefined) {
-        CUSTOM_DATE = null;
-    }
     
 
     async function fetchIssues(repositoryName, state = 'all', date = null) {
@@ -21,7 +17,7 @@ try {
             const query = `q=repo:actions/${repositoryName}+type:issue`
             const urlWithRepoName = `${API_ENDPOINT_URL}?${query}`
 
-            if (date) {
+            if (date !== null) {
                 const urlWithQueryWithDate = `${urlWithRepoName}+created:>${date}`
                 const { data } = await axios({
                     method: 'get',
@@ -59,7 +55,7 @@ try {
         const stringWithNotNullDate = 'Date provided. Gathering Issue information since the date provided'
         const stringWithNullDate = 'Date not provided. Gathering Issue information in total numbers up to now...'
 
-        if (date === null) {
+        if (CUSTOM_DATE === null) {
             console.log(stringWithNullDate);
         }
         else {
