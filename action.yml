@@ -8,7 +8,6 @@ inputs:
   custom-date:
     description: 'Custom date (up until today) from which the repository data is analyzed'
     required: false
-    # default
 runs:
   using: 'node16'
-  main: 'index.js'
+  main: 'dist/index.js'
