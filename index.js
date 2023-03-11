@@ -10,9 +10,7 @@ try {
     const REPO_NAME = core.getInput('repository-name');
     const CUSTOM_DATE = core.getInput('custom-date');
     const GITHUB_TOKEN = core.getInput('repo-token');
-    if (!CUSTOM_DATE) {
-        CUSTOM_DATE = new Date().toTimeString();
-    }
+    
 
     async function fetchIssues(repositoryName, state = 'all', date = null) {
         try {
@@ -53,29 +51,19 @@ try {
         await fetchIssues(repositoryName, 'closed', date);
     }
 
-    // const rl = readline.createInterface({
-    //     input: process.stdin,
-    //     output: process.stdout,
-    // });
-
     async function main() {
+        const stringWithNotNullDate = 'Date provided. Gathering Issue information since the date provided'
+        const stringWithNullDate = 'Date not provided. Gathering Issue information in total numbers up to now...'
 
-        console.log('Displaying issue information based on your input...');
+        if (date === null) {
+            console.log(stringWithNullDate);
+        }
+        else {
+            console.log(`${stringWithNotNullDate} (${CUSTOM_DATE})`);
+        }
+
         showTotalIssues(REPO_NAME, CUSTOM_DATE);
 
-        // rl.question('Do you want to see the issues generated on a custom date? (yes/no) ', (answer) => {
-        //         if (answer.toLowerCase() === 'yes') {
-        //             rl.question('Please input a date [YYYY-MM-DD]: ', (date) => {
-        //             console.log(`You entered the date: ${date}. Showing the numbers...`);
-        //             showTotalIssues(REPO_NAME, date)
-        //             rl.close();
-        //         });
-        //         } else {
-        //             console.log('Okay, showing total numbers instead...');
-        //             showTotalIssues(REPO_NAME, null);
-        //             rl.close();
-        //         }
-        //     });
     };
 
     main();
