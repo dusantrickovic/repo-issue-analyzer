@@ -17012,7 +17012,6 @@ try {
     if (CUSTOM_DATE === undefined) {
         CUSTOM_DATE = null;
     }
-    
 
     async function fetchIssues(repositoryName, state = 'all', date = null) {
         try {
@@ -17057,7 +17056,7 @@ try {
         const stringWithNotNullDate = 'Date provided. Gathering Issue information since the date provided'
         const stringWithNullDate = 'Date not provided. Gathering Issue information in total numbers up to now...'
 
-        if (CUSTOM_DATE === null) {
+        if (CUSTOM_DATE === null || CUSTOM_DATE === 'now') {
             console.log(stringWithNullDate);
         }
         else {
