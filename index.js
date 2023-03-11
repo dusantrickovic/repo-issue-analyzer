@@ -10,14 +10,9 @@ try {
 
     // Input variables read from test.yml
     // If no custom date is provided in the configuration's input, use CURRENT_DATE as default.
-    
-    // let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
-    // const REPO_NAME = core.getInput('repository-name');
-    // const GITHUB_TOKEN = core.getInput('repo-token');
-
-    let CUSTOM_DATE = '2023-02-20';
-    const REPO_NAME = 'checkout';
-    const GITHUB_TOKEN = process.env.GITHUB_ACCESS_KEY;
+    let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
+    const REPO_NAME = core.getInput('repository-name');
+    const GITHUB_TOKEN = core.getInput('repo-token');
 
     function isValidDateFormat(date) {
         // Use a regular expression to match the date format
