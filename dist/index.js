@@ -17007,7 +17007,7 @@ const API_ENDPOINT_URL = 'https://api.github.com/search/issues';
 
 try {
     const REPO_NAME = core.getInput('repository-name');
-    const CUSTOM_DATE = core.getInput('custom-date');
+    let CUSTOM_DATE = core.getInput('custom-date');
     const GITHUB_TOKEN = core.getInput('repo-token');
 
     if (CUSTOM_DATE === undefined) {
