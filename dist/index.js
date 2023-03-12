@@ -17000,9 +17000,9 @@ try {
     // Input variables read from test.yml
     // If no (valid) custom date is provided in the configuration's input, use CURRENT_DATE as default.
 
-    let CUSTOM_DATE = (core.getInput('custom-date') === '' || core.getInput('custom-date') === CURRENT_DATE) ? CURRENT_DATE : core.getInput('custom-date');
+    let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
     
-    if (isValidDateFormat(CUSTOM_DATE) === false) {
+    if (isValidDateFormat(CUSTOM_DATE) === false || core.getInput('custom-date') === CURRENT_DATE) {
         CUSTOM_DATE = CURRENT_DATE;
     }
 
