@@ -17003,9 +17003,12 @@ try {
 
     let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
     
-    if (isValidDateFormat(CUSTOM_DATE) === false || core.getInput('custom-date') === CURRENT_DATE) {
-        console.log('Date validation failed or you provided current date. Using current date...')
+    if (isValidDateFormat(CUSTOM_DATE) === false || CUSTOM_DATE === CURRENT_DATE) {
+        console.log(`Date provided: ${CUSTOM_DATE}`);
+        console.log(`Current date: ${CURRENT_DATE}`);
+        console.log(`Invalid or current date input. Using current date...`)
         CUSTOM_DATE = CURRENT_DATE;
+        usingCurrentDate = true;
     }
 
     const REPO_NAME = core.getInput('repository-name');
@@ -17016,14 +17019,6 @@ try {
     // CUSTOM_DATE = '2023-04-32';
     // REPO_NAME = 'runner-images';
     // GITHUB_TOKEN = process.env.GITHUB_ACCESS_KEY;
-
-    if (isValidDateFormat(CUSTOM_DATE) === false || CUSTOM_DATE === CURRENT_DATE) {
-        console.log(`Date provided: ${CUSTOM_DATE}`);
-        console.log(`Current date: ${CURRENT_DATE}`);
-        console.log(`Invalid or current date input. Using current date...`)
-        CUSTOM_DATE = CURRENT_DATE;
-        usingCurrentDate = true;
-    }
 
     function isValidDateFormat(date) {
         // Use a regular expression to match the date format
