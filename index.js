@@ -11,7 +11,7 @@ try {
 
     let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
     
-    if (isValidDateFormat(CUSTOM_DATE) === false) {
+    if (isValidDateFormat(CUSTOM_DATE) === false && CUSTOM_DATE !== CURRENT_DATE) {
         CUSTOM_DATE = CURRENT_DATE;
     }
 
@@ -40,7 +40,7 @@ try {
           const inputDate = new Date(`${year}-${month}-${day}`)
       
           // There's no month past December and no day past 31st and no search can look into the future
-          if ((month <= 12 && day <= 31 && year <= currentYear) && (inputDate < dateObject)) {
+          if ((month <= 12 && day <= 31 && year <= currentYear) && (inputDate <= dateObject)) {
             return true;
           }
         }
