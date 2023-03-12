@@ -17028,9 +17028,10 @@ try {
           const year = parseInt(date.slice(0, 4));
           const month = parseInt(date.slice(5, 7));
           const day = parseInt(date.slice(8, 10));
+          const inputDate = new Date(`${year}-${month}-${day}`)
       
           // There's no month past December and no day past 31st and no search can look into the future
-          if ((month <= 12 || month <= currentMonth) && (day <= 31 || day <= currentDay) && year <= currentYear) {
+          if ((month <= 12 && day <= 31 && year <= currentYear) && (inputDate < dateObject)) {
             return true;
           }
         }
