@@ -11,7 +11,7 @@ try {
 
     let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
     
-    if (isValidDateFormat(CUSTOM_DATE) === false && CUSTOM_DATE !== CURRENT_DATE) {
+    if (isValidDateFormat(CUSTOM_DATE) === false || CUSTOM_DATE === CURRENT_DATE) {
         CUSTOM_DATE = CURRENT_DATE;
     }
 
