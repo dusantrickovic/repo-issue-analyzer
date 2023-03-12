@@ -17006,10 +17006,15 @@ const readline = __nccwpck_require__(4521);
 try {
     const dateObject = new Date();
     const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
-
+    let CUSTOM_DATE;
     // Input variables read from test.yml
-    // If no custom date is provided in the configuration's input, use CURRENT_DATE as default.
-    let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
+    // If no (valid) custom date is provided in the configuration's input, use CURRENT_DATE as default.
+    if (core.getInput('custom-date') === '' || isValidDateFormat(core.getInput('custom-date')) === false) {
+        CUSTOM_DATE = CURRENT_DATE;
+    }
+    else {
+        CUSTOM_DATE = core.getInput('custom-date');
+    }
     const REPO_NAME = core.getInput('repository-name');
     const GITHUB_TOKEN = core.getInput('repo-token');
 
@@ -17097,14 +17102,8 @@ try {
 
     async function main() {
 
-        // Checks the validity of the date input. If invalid, set to CURRENT_DATE
-        if (isValidDateFormat(CUSTOM_DATE) === false) {
-            console.error('Invalid date format. Switching to default current date...');
-            CUSTOM_DATE = CURRENT_DATE;
-        }
-
         const stringWithNotNullDate = `Date provided. Gathering information for 'actions/${REPO_NAME}' since the date provided`
-        const stringWithNullDate = `Date not provided. Gathering information for 'actions/${REPO_NAME}' in total numbers up to now...`
+        const stringWithNullDate = `Date not provided or invalid. Gathering information for 'actions/${REPO_NAME}' in total numbers up to now...`
 
         if (CUSTOM_DATE === '' || CUSTOM_DATE === CURRENT_DATE) {
             console.log(stringWithNullDate);
