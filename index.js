@@ -5,12 +5,26 @@ require('dotenv').config();
 
 try {
     const dateObject = new Date();
-    const CURRENT_DATE = `${dateObject.getFullYear()}-0${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
+
+    // Add this logic for two-digit days and months. This will add a 0 to the start when needed and, just in case, slice the last 2 characters
+    const dateObjectMonth = (dateObject.getMonth() + 1).toString().padStart(2, '0').slice(-2);
+    const dateObjectDay = dateObject.getDate().toString().padStart(2, '0').slice(-2);
+    
+    const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObjectMonth}-${dateObjectDay}`;
     let usingCurrentDate = false;
+    
     // Input variables read from test.yml
     // If no (valid) custom date is provided in the configuration's input, use CURRENT_DATE as default.
 
     let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
+    const REPO_NAME = core.getInput('repository-name');
+    const GITHUB_TOKEN = core.getInput('repo-token');
+    
+    // Uncomment for local testing purposes
+    
+    // CUSTOM_DATE = '2023-03-10';
+    // REPO_NAME = 'runner-images';
+    // GITHUB_TOKEN = process.env.GITHUB_ACCESS_KEY;
     
     if (isValidDateFormat(CUSTOM_DATE) === false || CUSTOM_DATE === CURRENT_DATE) {
         console.log(`Date provided: ${CUSTOM_DATE}`);
@@ -19,15 +33,6 @@ try {
         CUSTOM_DATE = CURRENT_DATE;
         usingCurrentDate = true;
     }
-
-    const REPO_NAME = core.getInput('repository-name');
-    const GITHUB_TOKEN = core.getInput('repo-token');
-
-    // Uncomment for local testing purposes
-
-    // CUSTOM_DATE = '2023-04-32';
-    // REPO_NAME = 'runner-images';
-    // GITHUB_TOKEN = process.env.GITHUB_ACCESS_KEY;
 
     function isValidDateFormat(date) {
         // Use a regular expression to match the date format
@@ -128,6 +133,8 @@ try {
             console.log(stringWithNullDate);
         }
         else {
+            console.log(`Date provided: ${CUSTOM_DATE}`);
+            console.log(`Current date: ${CURRENT_DATE}`);
             console.log(`${stringWithNotNullDate} (${CUSTOM_DATE})`);
         }
 
