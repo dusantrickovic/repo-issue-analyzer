@@ -12,7 +12,7 @@ try {
     
     const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObjectMonth}-${dateObjectDay}`;
     let usingCurrentDate = false;
-    
+
     // Input variables read from test.yml
     // If no (valid) custom date is provided in the configuration's input, use CURRENT_DATE as default.
 
@@ -22,7 +22,7 @@ try {
     
     // Uncomment for local testing purposes
     
-    // CUSTOM_DATE = '2023-03-10';
+    // CUSTOM_DATE = '2023-03-13';
     // REPO_NAME = 'runner-images';
     // GITHUB_TOKEN = process.env.GITHUB_ACCESS_KEY;
     
@@ -69,38 +69,26 @@ try {
             const API_ENDPOINT_URL = 'https://api.github.com/search/issues';
 
             // Additional query that searches for the specific repo and for a specific type (issue or PR)
-            const QUERY = `q=repo:actions/${repositoryName}+type:${type.toLowerCase()}`
-            const urlWithRepoName = `${API_ENDPOINT_URL}?${QUERY}`
+            const repositoryNameParameter = `q=repo:actions/${repositoryName}`;
+            const typeParameter = `type:${type.toLocaleLowerCase()}`;
+            const dateString = `+created:>${date}`;
+            const dateParameter = `${(date === null || date === CURRENT_DATE) ? '' : dateString}`;
+            const QUERY = `${repositoryNameParameter}+${typeParameter}`
+            const url = `${API_ENDPOINT_URL}?${QUERY}`
+
 
             // A for loop that goes through the uniform logic for each of the three possible states
             for(const state of states) {
-                
-                if (date !== null && date !== CURRENT_DATE) {
-                    const urlWithQueryWithDate = `${urlWithRepoName}+created:>${date}`
-                    await axios({
-                        method: 'get',
-                        url: `${urlWithQueryWithDate}${state === 'all' ? '&state:all' : `+state:${state}`}`,
-                        headers: {
-                            authentication: `token ${GITHUB_TOKEN}`
-                        }
-                    })
-                    .then(({data}) => {
-                        console.log(`Number of ${state} ${type}s after ${date}: ${data.total_count}`);
-                    });
-                    continue;
-                }
-
                 await axios({
                     method: 'get',
-                    url: `${urlWithRepoName}${state === 'all' ? '&state:all' : ` state:${state}`}`,
+                    url: `${url}+${dateParameter}${state === 'all' ? '&state:all' : `+state:${state}`}`,
                     headers: {
                         authentication: `token ${GITHUB_TOKEN}`
                     }
                 })
                 .then(({data}) => {
-                    console.log(`Total number of ${state} ${type}s: ${data.total_count}`);
+                    console.log(`Number of ${state} ${type}s ${(date === null || date === CURRENT_DATE) ? '' : `after ${date}`}: ${data.total_count}`);
                 });
-                continue;
             }
 
         } catch (error) {

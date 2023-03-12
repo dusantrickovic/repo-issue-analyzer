@@ -14,5 +14,5 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repository-name: 'runner-images'
-          custom-date: '2023-03-12'
+          custom-date: '2023-01-18'
 
