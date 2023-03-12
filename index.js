@@ -1,7 +1,6 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
 const axios = require('axios');
-const readline = require('readline');
 require('dotenv').config();
 
 try {

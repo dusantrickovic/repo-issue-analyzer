@@ -12686,14 +12686,6 @@ module.exports = require("punycode");
 
 /***/ }),
 
-/***/ 4521:
-/***/ ((module) => {
-
-"use strict";
-module.exports = require("readline");
-
-/***/ }),
-
 /***/ 2781:
 /***/ ((module) => {
 
@@ -17000,7 +16992,6 @@ var __webpack_exports__ = {};
 const core = __nccwpck_require__(115);
 const github = __nccwpck_require__(3007);
 const axios = __nccwpck_require__(3616);
-const readline = __nccwpck_require__(4521);
 (__nccwpck_require__(3337).config)();
 
 try {
