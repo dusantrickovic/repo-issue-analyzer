@@ -17005,7 +17005,7 @@ try {
     if (isValidDateFormat(CUSTOM_DATE) === false) {
         CUSTOM_DATE = CURRENT_DATE;
     }
-    
+
     const REPO_NAME = core.getInput('repository-name');
     const GITHUB_TOKEN = core.getInput('repo-token');
 
@@ -17030,7 +17030,7 @@ try {
           const day = parseInt(date.slice(8, 10));
       
           // There's no month past December and no day past 31st and no search can look into the future
-          if ((month <= 12 && month <= currentMonth) && (day <= 31 && day <= currentDay) && year <= currentYear) {
+          if ((month <= 12 || month <= currentMonth) && (day <= 31 || day <= currentDay) && year <= currentYear) {
             return true;
           }
         }
