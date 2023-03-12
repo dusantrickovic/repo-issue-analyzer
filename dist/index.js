@@ -16999,13 +16999,11 @@ try {
     const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
     // Input variables read from test.yml
     // If no (valid) custom date is provided in the configuration's input, use CURRENT_DATE as default.
-    let CUSTOM_DATE;
 
-    if (core.getInput('custom-date') === '' || isValidDateFormat(core.getInput('custom-date') === '') === false) {
+    let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
+    
+    if (isValidDateFormat(CUSTOM_DATE) === false) {
         CUSTOM_DATE = CURRENT_DATE;
-    }
-    else {
-        CUSTOM_DATE = core.getInput('custom-date') === '';
     }
 
     const REPO_NAME = core.getInput('repository-name');
