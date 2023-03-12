@@ -16996,13 +16996,15 @@ const axios = __nccwpck_require__(3616);
 
 try {
     const dateObject = new Date();
-    const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
+    const CURRENT_DATE = `${dateObject.getFullYear()}-0${dateObject.getMonth() + 1}-${dateObject.getDate()}`;
+    let usingCurrentDate = false;
     // Input variables read from test.yml
     // If no (valid) custom date is provided in the configuration's input, use CURRENT_DATE as default.
 
     let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
     
     if (isValidDateFormat(CUSTOM_DATE) === false || core.getInput('custom-date') === CURRENT_DATE) {
+        console.log('Date validation failed or you provided current date. Using current date...')
         CUSTOM_DATE = CURRENT_DATE;
     }
 
@@ -17011,9 +17013,17 @@ try {
 
     // Uncomment for local testing purposes
 
-    // CUSTOM_DATE = '2023-02-14';
+    // CUSTOM_DATE = '2023-04-32';
     // REPO_NAME = 'runner-images';
     // GITHUB_TOKEN = process.env.GITHUB_ACCESS_KEY;
+
+    if (isValidDateFormat(CUSTOM_DATE) === false || CUSTOM_DATE === CURRENT_DATE) {
+        console.log(`Date provided: ${CUSTOM_DATE}`);
+        console.log(`Current date: ${CURRENT_DATE}`);
+        console.log(`Invalid or current date input. Using current date...`)
+        CUSTOM_DATE = CURRENT_DATE;
+        usingCurrentDate = true;
+    }
 
     function isValidDateFormat(date) {
         // Use a regular expression to match the date format
@@ -17029,8 +17039,8 @@ try {
           const month = parseInt(date.slice(5, 7));
           const day = parseInt(date.slice(8, 10));
           const inputDate = new Date(`${year}-${month}-${day}`)
-      
           // There's no month past December and no day past 31st and no search can look into the future
+
           if (month <= 12 && day <= 31) {
             if (year < currentYear || (year === currentYear && month < currentMonth) || 
                 (year === currentYear && month === month && day <= currentDay)) {
@@ -17108,9 +17118,9 @@ try {
     async function main() {
 
         const stringWithNotNullDate = `Date provided. Gathering information for 'actions/${REPO_NAME}' since the date provided`
-        const stringWithNullDate = `Date not provided or invalid. Gathering information for 'actions/${REPO_NAME}' in total numbers up to now...`
+        const stringWithNullDate = `Using current date. Gathering information for 'actions/${REPO_NAME}' in total numbers up to now...`
 
-        if (CUSTOM_DATE === '' || CUSTOM_DATE === CURRENT_DATE) {
+        if (usingCurrentDate === true) {
             console.log(stringWithNullDate);
         }
         else {
