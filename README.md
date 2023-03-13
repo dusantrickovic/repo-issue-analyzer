@@ -18,5 +18,7 @@ To try out this action, you can clone the repository using ```git clone <repo-li
 
 - The only inputs that need modifying are **custom-date** and **repository-name** inside `.github/workflows/test.yml`. GitHub token is already defined.
 
+- If you decide to try the action out locally, you will need to generate your own GitHub Personal Access Token, create an env file and define it as variable within it.
+
 - If you'd only like to test the action locally, I have provided some local variables to use instead (just make sure to comment out the ones interacting with `@actions/core` first)!
 
