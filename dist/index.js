@@ -1,6 +1,99 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
+/***/ 6017:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+const core = __nccwpck_require__(115);
+const axios = __nccwpck_require__(3616);
+(__nccwpck_require__(3337).config)({path: 'functions/.env' });
+
+const dateObject = new Date();
+
+// Add this logic for two-digit days and months. This will add a 0 to the start when needed and, just in case, slice the last 2 characters
+const dateObjectMonth = (dateObject.getMonth() + 1).toString().padStart(2, '0').slice(-2);
+const dateObjectDay = dateObject.getDate().toString().padStart(2, '0').slice(-2);
+    
+const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObjectMonth}-${dateObjectDay}`;
+
+const GITHUB_TOKEN = core.getInput('repo-token');
+
+// Uncomment the line below for local testing purposes
+// GITHUB_TOKEN = process.env.GITHUB_ACCESS_KEY;
+
+async function fetchData(repositoryName, states = [], date = null, type='issue') {
+    try {
+        // Base URL
+        const API_ENDPOINT_URL = 'https://api.github.com/search/issues';
+
+        // Additional query that searches for the specific repo and for a specific type (issue or PR)
+        const repositoryNameParameter = `q=repo:actions/${repositoryName}`;
+        const typeParameter = `type:${type.toLocaleLowerCase()}`;
+        const dateString = `+created:>${date}`;
+        const dateParameter = `${(date === null || date === CURRENT_DATE) ? '' : dateString}`;
+        const QUERY = `${repositoryNameParameter}+${typeParameter}`;
+        const url = `${API_ENDPOINT_URL}?${QUERY}`;
+
+        // A for loop that goes through the uniform logic for each of the three possible states
+        for(const state of states) {
+            await axios({
+                method: 'get',
+                url: `${url}+${dateParameter}${state === 'all' ? '&state:all' : `+state:${state}`}`,
+                headers: {
+                    Authentication: `token ${GITHUB_TOKEN}`,
+                    Accept: 'application/vnd.github+json'
+                }
+            })
+            .then(({data}) => {
+                console.log(`Number of ${state} ${type}s ${(date === null || date === CURRENT_DATE) ? '' : `after ${date}`}: ${data.total_count}`);
+            });
+        }
+
+    } catch (error) {
+        console.error(error);
+        throw new Error('Error fetching data');
+    }
+}
+
+module.exports = { fetchData, CURRENT_DATE };
+
+/***/ }),
+
+/***/ 5972:
+/***/ ((module) => {
+
+function isValidDateFormat(date) {
+    const dateObject = new Date();
+    // Use a regular expression to match the date format
+    const dateFormatString = /^\d{4}-\d{2}-\d{2}$/;
+    // Find current date
+    const currentDay = dateObject.getDate();
+    const currentMonth = dateObject.getMonth() + 1;  // Begins counting from 0
+    const currentYear = dateObject.getFullYear();
+  
+    // If the date string matches the regular expression, check if the month and day values are valid
+    if (dateFormatString.test(date)) {
+      const year = parseInt(date.slice(0, 4));
+      const month = parseInt(date.slice(5, 7));
+      const day = parseInt(date.slice(8, 10));
+      // There's no month past December and no day past 31st and no search can look into the future
+
+      if (month <= 12 && day <= 31) {
+        if (year < currentYear || (year === currentYear && month < currentMonth) || 
+            (year === currentYear && month === month && day <= currentDay)) {
+                return true;
+        }
+      }
+    }
+  
+    // If the date string is invalid or the month and day values are invalid, return false
+    return false;
+  }
+
+  module.exports = isValidDateFormat;
+
+/***/ }),
+
 /***/ 453:
 /***/ (function(__unused_webpack_module, exports, __nccwpck_require__) {
 
@@ -16991,31 +17084,27 @@ var __webpack_exports__ = {};
 (() => {
 const core = __nccwpck_require__(115);
 const github = __nccwpck_require__(3007);
+const isValidDateFormat = __nccwpck_require__(5972);
+const { fetchData, CURRENT_DATE } = __nccwpck_require__(6017);
 const axios = __nccwpck_require__(3616);
-(__nccwpck_require__(3337).config)();
+(__nccwpck_require__(3337).config)({path: __dirname + '/.env' })
+
 
 try {
-    const dateObject = new Date();
-
-    // Add this logic for two-digit days and months. This will add a 0 to the start when needed and, just in case, slice the last 2 characters
-    const dateObjectMonth = (dateObject.getMonth() + 1).toString().padStart(2, '0').slice(-2);
-    const dateObjectDay = dateObject.getDate().toString().padStart(2, '0').slice(-2);
-    
-    const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObjectMonth}-${dateObjectDay}`;
     let usingCurrentDate = false;
 
-    // Input variables read from test.yml
+    // Input variables read from test.yml (comment them when testing localy)
+    // The GITHUB_TOKEN variable is placed inside functions/fetch-data.js, as it is the only piece of code that's using it.
+
     // If no (valid) custom date is provided in the configuration's input, use CURRENT_DATE as default.
 
     let CUSTOM_DATE = core.getInput('custom-date') === '' ? CURRENT_DATE : core.getInput('custom-date');
     const REPO_NAME = core.getInput('repository-name');
-    const GITHUB_TOKEN = core.getInput('repo-token');
     
     // Uncomment for local testing purposes
     
-    // CUSTOM_DATE = '2023-03-13';
+    // CUSTOM_DATE = '2023-01-10';
     // REPO_NAME = 'runner-images';
-    // GITHUB_TOKEN = process.env.GITHUB_ACCESS_KEY;
     
     if (isValidDateFormat(CUSTOM_DATE) === false || CUSTOM_DATE === CURRENT_DATE) {
         console.log(`Date provided: ${CUSTOM_DATE}`);
@@ -17023,82 +17112,20 @@ try {
         console.log(`Invalid or current date input. Using current date...`)
         CUSTOM_DATE = CURRENT_DATE;
         usingCurrentDate = true;
-    }
-
-    function isValidDateFormat(date) {
-        // Use a regular expression to match the date format
-        const dateFormatString = /^\d{4}-\d{2}-\d{2}$/;
-        // Find current date
-        const currentDay = dateObject.getDate();
-        const currentMonth = dateObject.getMonth() + 1;  // Begins counting from 0
-        const currentYear = dateObject.getFullYear();
-      
-        // If the date string matches the regular expression, check if the month and day values are valid
-        if (dateFormatString.test(date)) {
-          const year = parseInt(date.slice(0, 4));
-          const month = parseInt(date.slice(5, 7));
-          const day = parseInt(date.slice(8, 10));
-          const inputDate = new Date(`${year}-${month}-${day}`)
-          // There's no month past December and no day past 31st and no search can look into the future
-
-          if (month <= 12 && day <= 31) {
-            if (year < currentYear || (year === currentYear && month < currentMonth) || 
-                (year === currentYear && month === month && day <= currentDay)) {
-                    return true;
-            }
-          }
-        }
-      
-        // If the date string is invalid or the month and day values are invalid, return false
-        return false;
-      }
-      
-
-    async function fetchData(repositoryName, states = [], date = null, type='issue') {
-        try {
-            // Base URL
-            const API_ENDPOINT_URL = 'https://api.github.com/search/issues';
-
-            // Additional query that searches for the specific repo and for a specific type (issue or PR)
-            const repositoryNameParameter = `q=repo:actions/${repositoryName}`;
-            const typeParameter = `type:${type.toLocaleLowerCase()}`;
-            const dateString = `+created:>${date}`;
-            const dateParameter = `${(date === null || date === CURRENT_DATE) ? '' : dateString}`;
-            const QUERY = `${repositoryNameParameter}+${typeParameter}`
-            const url = `${API_ENDPOINT_URL}?${QUERY}`
-
-
-            // A for loop that goes through the uniform logic for each of the three possible states
-            for(const state of states) {
-                await axios({
-                    method: 'get',
-                    url: `${url}+${dateParameter}${state === 'all' ? '&state:all' : `+state:${state}`}`,
-                    headers: {
-                        authentication: `token ${GITHUB_TOKEN}`
-                    }
-                })
-                .then(({data}) => {
-                    console.log(`Number of ${state} ${type}s ${(date === null || date === CURRENT_DATE) ? '' : `after ${date}`}: ${data.total_count}`);
-                });
-            }
-
-        } catch (error) {
-            console.error(error);
-            throw new Error('Error fetching data');
-        }
-    }
+    } 
     
     // Calls the fetching function and deals with the formatting of the output
     async function showAllData(repositoryName, date = undefined) {
+        const states = ['all', 'open', 'closed'];
         console.log('--------------------------');
         console.info(`REPOSITORY NAME: actions/${REPO_NAME}`);
         console.log('--------------------------');
 
-        await fetchData(repositoryName, ['all', 'open', 'closed'], date, 'issue');
+        await fetchData(repositoryName, states, date, 'issue');
 
         console.log('--------------------------');
 
-        await fetchData(repositoryName, ['all', 'open', 'closed'], date, 'PR');
+        await fetchData(repositoryName, states, date, 'PR');
 
         console.log('--------------------------');
     }
