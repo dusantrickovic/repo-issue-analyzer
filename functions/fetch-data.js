@@ -40,7 +40,6 @@ async function fetchData(repositoryName, states = [], date = null, type='issue')
                 }
             })
             .then(({data}) => {
-                console.log(GITHUB_TOKEN)
                 console.log(`Number of ${state} ${type}s ${(date === null || date === CURRENT_DATE) ? '' : `after ${date}`}: ${data.total_count}`);
             });
         }
