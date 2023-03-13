@@ -17086,8 +17086,6 @@ const core = __nccwpck_require__(115);
 const github = __nccwpck_require__(3007);
 const isValidDateFormat = __nccwpck_require__(5972);
 const { fetchData, CURRENT_DATE } = __nccwpck_require__(6017);
-const axios = __nccwpck_require__(3616);
-(__nccwpck_require__(3337).config)({path: __dirname + '/.env' })
 
 
 try {
@@ -17103,16 +17101,8 @@ try {
     
     // Uncomment for local testing purposes
     
-    // CUSTOM_DATE = '2023-01-10';
+    // CUSTOM_DATE = '2023-03-13';
     // REPO_NAME = 'runner-images';
-    
-    if (isValidDateFormat(CUSTOM_DATE) === false || CUSTOM_DATE === CURRENT_DATE) {
-        console.log(`Date provided: ${CUSTOM_DATE}`);
-        console.log(`Current date: ${CURRENT_DATE}`);
-        console.log(`Invalid or current date input. Using current date...`)
-        CUSTOM_DATE = CURRENT_DATE;
-        usingCurrentDate = true;
-    } 
     
     // Calls the fetching function and deals with the formatting of the output
     async function showAllData(repositoryName, date = undefined) {
@@ -17131,13 +17121,21 @@ try {
     }
 
     async function main() {
-
         const stringWithNotNullDate = `Date provided. Gathering information for 'actions/${REPO_NAME}' since the date provided`
         const stringWithNullDate = `Using current date. Gathering information for 'actions/${REPO_NAME}' in total numbers up to now...`
+
+        if (isValidDateFormat(CUSTOM_DATE) === false || CUSTOM_DATE === CURRENT_DATE) {
+            console.log(`Date provided: ${CUSTOM_DATE}`);
+            console.log(`Current date: ${CURRENT_DATE}`);
+            console.log(`Invalid or current date input.`)
+            CUSTOM_DATE = CURRENT_DATE;
+            usingCurrentDate = true;
+        } 
 
         if (usingCurrentDate === true) {
             console.log(stringWithNullDate);
         }
+
         else {
             console.log(`Date provided: ${CUSTOM_DATE}`);
             console.log(`Current date: ${CURRENT_DATE}`);
