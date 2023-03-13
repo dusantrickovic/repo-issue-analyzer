@@ -32,15 +32,16 @@ try {
     
     // Calls the fetching function and deals with the formatting of the output
     async function showAllData(repositoryName, date = undefined) {
+        const states = ['all', 'open', 'closed'];
         console.log('--------------------------');
         console.info(`REPOSITORY NAME: actions/${REPO_NAME}`);
         console.log('--------------------------');
 
-        await fetchData(repositoryName, ['all', 'open', 'closed'], date, 'issue');
+        await fetchData(repositoryName, states, date, 'issue');
 
         console.log('--------------------------');
 
-        await fetchData(repositoryName, ['all', 'open', 'closed'], date, 'PR');
+        await fetchData(repositoryName, states, date, 'PR');
 
         console.log('--------------------------');
     }

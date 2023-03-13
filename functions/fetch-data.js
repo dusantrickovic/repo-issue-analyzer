@@ -10,7 +10,7 @@ const dateObjectDay = dateObject.getDate().toString().padStart(2, '0').slice(-2)
     
 const CURRENT_DATE = `${dateObject.getFullYear()}-${dateObjectMonth}-${dateObjectDay}`;
 
-const GITHUB_TOKEN = core.getInput('repo-token')
+const GITHUB_TOKEN = core.getInput('repo-token');
 
 // Uncomment the line below for local testing purposes
 // GITHUB_TOKEN = process.env.GITHUB_ACCESS_KEY;
@@ -27,7 +27,6 @@ async function fetchData(repositoryName, states = [], date = null, type='issue')
         const dateParameter = `${(date === null || date === CURRENT_DATE) ? '' : dateString}`;
         const QUERY = `${repositoryNameParameter}+${typeParameter}`;
         const url = `${API_ENDPOINT_URL}?${QUERY}`;
-
 
         // A for loop that goes through the uniform logic for each of the three possible states
         for(const state of states) {
